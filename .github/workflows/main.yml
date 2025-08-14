@@ -11,11 +11,14 @@ jobs:
       - name: 원격저장소에서 소스를 복사
         uses: actions/checkout@v3
 
-      - name: 이미지 빌드 단계
-        run: |
-          echo '이미지 빌드 1단계'
-          echo '이미지 빌드 2단계'
-          ls -la
+      - name: 소스 파일을 docker이미지로 빌드한다
+        run: docker build -t moon8sun/my-fastapi-whoami:latest .
+
+      - name: docker hub에 로그인 한다. 
+        run: docker login -u moon8sun -p ${{ secrets.DOCKER_PASSWORD }}
+      
+      - name: 생성된 이미지를 docker hub에 푸시한다
+        run: docker push moon8sun/my-fastapi-whoami:latest
   
   deploy:
     needs: build-docker-image
