@@ -35,7 +35,7 @@ jobs:
         run: docker pull moon8sun/my-fastapi-whoami:latest
 
       - name: 서비스 실행
-      - run: |
+        run: |
           docker service create \
           --name my-fastapi-whoami-app \
           --publish published=8000,target=8000 \
