@@ -4,6 +4,40 @@ on:
   push:
     branches: [ main ]
 
+env:
+  USERNAME: moon8sun 
+# 변수 명 = 값 
+# properties -> java에서 많이 사용되는 변수 설정
+# env
+# ini
+
+# node1.group1.변수명1 =값1
+# node1.group1.변수명2 =값2
+# node1.group1.변수명3 =값3
+# node1.group2.변수명1 =값1
+# node1.group2.변수명2 =값2
+# node1.group2.변수명3 =값3
+
+# node2.group1.변수명1 =값1
+# node2.group1.변수명2 =값2
+# node2.group1.변수명3 =값3
+# node2.group2.변수명1 =값1
+# node2.group2.변수명2 =값2
+# node2.group2.변수명3 =값3
+
+# 이렇게 작성하면 가독성이 떨어진다. 
+# 때문에 레벨로 구분하는 것이 좋다. 
+# node1:
+#   group1:
+#     변수명1: 값1
+#     변수명2: 값2
+#     변수명3: 값3
+
+#   group2:
+#     변수명1: 값1
+#     변수명2: 값2
+#     변수명3: 값3
+
 jobs:
   build-docker-image:
     runs-on: ubuntu-latest
@@ -12,14 +46,14 @@ jobs:
         uses: actions/checkout@v3
 
       - name: 소스 파일을 docker이미지로 빌드한다
-        run: docker build -t moon8sun/my-fastapi-whoami:latest .
+        run: docker build -t ${{ env.USERNAME }}/my-fastapi-whoami:latest .
 
       - name: docker hub에 로그인 한다. 
-        run: docker login -u moon8sun -p ${{ secrets.DOCKER_PASSWORD }}
+        run: docker login -u ${{ env.USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
       
       - name: 생성된 이미지를 docker hub에 푸시한다
-        run: docker push moon8sun/my-fastapi-whoami:latest
-  
+        run: docker push ${{ env.USERNAME }}/my-fastapi-whoami:latest
+
   deploy:
     needs: build-docker-image
     name: deploy
@@ -29,10 +63,10 @@ jobs:
         run: docker service rm my-fastapi-whoami-app
 
       - name: docker hub에 로그인 한다. 
-        run: docker login -u moon8sun -p ${{ secrets.DOCKER_PASSWORD }}
+        run: docker login -u ${{ env.USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
       
       - name: 생성된 이미지를 docker hub에 pull로 내려 받는다
-        run: docker pull moon8sun/my-fastapi-whoami:latest
+        run: docker pull ${{ env.USERNAME }}/my-fastapi-whoami:latest
 
       - name: 서비스 실행
         run: |
@@ -40,4 +74,4 @@ jobs:
           --name my-fastapi-whoami-app \
           --publish published=8000,target=8000 \
           --replicas 3 \
-          moon8sun/my-fastapi-whoami
+          ${{ env.USERNAME }}/my-fastapi-whoami
