@@ -16,6 +16,7 @@ async def read_root(request: Request):
         "method"      : request.method,               # HTTP 요청 메서드 (GET, POST 등)
         "path"        : request.url.path,             # 요청 경로
         "query_params": dict(request.query_params),   # 쿼리 파라미터
+        "username"    : "moon8sun",                   # 이름 추가 -> 수정된 사항 확인
         "message"     : f"Hello from {container_id}!" # 환영 메시지
     }
 
