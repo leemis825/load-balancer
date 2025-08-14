@@ -1,0 +1,12 @@
+name: 빌드 및 배포 
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-docker-image:
+    runs-on: ubuntu-latest
+    steps:
+      -run: ls -al
+  
